@@ -2,11 +2,11 @@
 
 #include <stdio.h>
 
-#define IN  1 // inside a word
-#define OUT 0 // outside a word
-#define ML  20  // max length
+#define IN    1   // inside a word
+#define OUT   0   // outside a word
+#define ML    20  // max length
 #define STYLE '_' // histogram style
-#define DIST 4  // group distance of histogram
+#define DIST  4   // group distance of histogram
 //
 // HOW TO PARAMETERIZE THE FROMAT STRING IN `printf`??????????????????????????????????????????
 //#define PRINTF0(dist) "%%-%dd", dist
