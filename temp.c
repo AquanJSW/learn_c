@@ -1,4 +1,4 @@
-/* Fahrentheit-Centigrade Tables */
+/* Fahrenheit-Centigrade Tables */
 
 #include <stdio.h>
 

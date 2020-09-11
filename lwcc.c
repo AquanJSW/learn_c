@@ -29,3 +29,4 @@ int main() {
     printf("line\tword\tcharacter\n");
     printf("%4d\t%4d\t%9d\n", lc, wc, cc);
 }
+
