@@ -1,5 +1,6 @@
 /* Write a program to remove trailing blanks and tabs from each line of input, and to delete
- * entirely blank lines. */
+ * entirely blank lines.
+ * For the situation "\t "，doesn't work. */
 
 #include <stdio.h>
 
