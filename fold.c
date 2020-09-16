@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define MAXLEN	1000	// max length of a line
-#define COLLIM	80		// fold by specified column
+#define COLLIM	50		// fold by specified column
 
 int getline_(char s[], int lim);
 int copy(char src[], char dst[]);
@@ -59,7 +59,10 @@ int copy(char src[], char dst[]) {
 }
 
 
-/* Fold a long line to a new array according to column limit. */
+/* Fold a long line to a new array with the following considering:
+ * 1. No blanks at the beginning of a new line;
+ * 2. No blanks at the ending of a new line;
+ * 3. Satisfied the column limit. */
 int fold(const char src[], char *dst, int *dstr, int maxlen, int collim) {
 	int i;
 	int dstc;		// dst's column index
@@ -72,12 +75,14 @@ int fold(const char src[], char *dst, int *dstr, int maxlen, int collim) {
 				if (src[i] != ' ' && src[i] != '\t')
 					dst[*dstr * maxlen + dstc++] = src[i];
 			} else {
-				dst[*dstr * maxlen + dstc++] = src[i];
 				if (src[i] == ' ' || src[i] == '\t') {
 					++nblank;
-					if (src[i-1] != ' ' && src[i-1] != '\t')
+					if (src[i-1] != ' ' && src[i-1] != '\t') {
 						entry = dstc;
+						nblank = 0;
+					}
 				}
+				dst[*dstr * maxlen + dstc++] = src[i];
 			}
 		} else {
 			if (src[i-1] != ' ' && src[i-1] != '\t' && (src[i] == ' ' || src[i] == '\t')) {
@@ -87,7 +92,8 @@ int fold(const char src[], char *dst, int *dstr, int maxlen, int collim) {
 			} else {
 				dst[*dstr * maxlen + entry] = '\n';
 				dst[(*dstr)++ * maxlen + entry + 1] = '\0';
-				i -= collim - entry - nblank + 2;
+				i -= collim - entry - nblank + 1;
+				dstc = nblank = entry = 0;
 			}
 		}
 	}
