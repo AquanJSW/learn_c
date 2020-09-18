@@ -1,3 +1,3 @@
 cmake_minimum_required(VERSION 3.5)
 project(learn_c)
-add_executable(hstring hstring.c)
+add_executable(a escape.c)
