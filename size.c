@@ -6,12 +6,14 @@
 
 #define SAME 0
 #define DIFF 1
+#define tprintf(type) printf(#type "\t%d\n", type)
 
 int range(char s[]);
 int strcmp_(const char s[], const char d[]);
 long unsigned int power(long unsigned int base, long unsigned int exp);
 
 int main(void) {
+	tprintf(CHARCLASS_NAME_MAX);
 	printf("CHAR_BIT\t%d\n", CHAR_BIT);
 	printf("CHAR_MAX\t%d\n", CHAR_MAX);
 	printf("CHAR_MIN\t%d\n", CHAR_MIN);
