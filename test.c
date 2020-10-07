@@ -1,8 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <syscall.h>
 
+#define frand() (double) rand() / (RAND_MAX+1.0)
 int main(void) {
-	int m[2][2] = {1, 2, 3, 4};
-	int *p = *m;
-	printf("%d\n", *(p));
-	printf("%d\n", *(p+=2));
+	printf("%f\n", frand());
 }

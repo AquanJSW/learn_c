@@ -1,59 +1,90 @@
-/* Write a program entab that replaces strings of blanks by the minimum number of tabs and blanks to achi
- * eve the same spacing. Use the same tab stops as for detab. 
+/* Write a program entab that replaces strings of blanks by the minimum number
+ * of tabs and blanks to achieve the same spacing. Use the same tab stops as for
+ * detab.
  *
- * Warning: Not perfectly implemented*/
+ * Exercise 5-11. Modify the program entab and detab (written as exercises in
+ * Chapter 1) to accept a list of tab stops as arguments. Use the default tab
+ * settings if there are no arguments.*/
 
-#include <stdio.h>
+#include "stdio.h"
+#include "stdlib.h"
 
-#define MAXLEN	1000	// max length of input
-#define TABSTOP	4
-#define IN		0		// inside a block of blanks
-#define OUT		1		// outside a block of blanks
+#define RB  '#' // for replacing of blank
+#define RT  '@' // for replacing of tab
 
-int checkout(char s[], int *i, int nspace);
-
-
-int main(void) {
-	int i;
-	int nspace;			// count the spaces in a block of blanks
-	char c, s[MAXLEN];
-	char blank = OUT;
-
-	for (nspace = i = 0; (c=getchar())!=EOF && i<MAXLEN-1;) {
-		if (c == '\t') {
-			s[i++] = '\t';
-			blank = IN;
-		}
-		else if (c == ' ') {
-			++nspace;
-			blank = IN;
-		}
-		else if (blank == IN) {
-			checkout(s, &i, nspace);
-			s[i++] = c;
-			nspace = 0;
-			blank = OUT;
-		}
-		else
-			s[i++] = c;
+int main(int argc, char *argv[]) {
+	const char *usage = "usage: entab TABSTOP\n";
+	unsigned char ts;   // tab stop
+	int c, bep, p, nb, nt;
+	enum STATUS {IN, OUT};
+	char status;
+	// default tab stop
+	if (argc == 1)
+		ts = 4;
+	else if (argc == 2)
+		ts = atoi(*++argv);
+	else {
+		printf("error: invalid argument\n%s", usage);
+		return 1;
 	}
 
-	printf("\n\nReplaced:\n%s", s);
-}
-
-
-/* Replace the spaces in one block of blanks by minimus number tabs and spaces to achieve to same
- * spacing */
-int checkout(char s[], int *i, int nspace) {
-	int ntab = nspace / TABSTOP;
-	int nsp  = nspace % TABSTOP;
-	int j;
-
-	for (j = 0; j < ntab; ++j)
-		s[(*i)++] = '\t';
-
-	for (j = 0; j < nsp; ++j)
-		s[(*i)++] = ' ';
-
-	return 0;
+	bep = 0;    // blank entrance position
+	p = 0;  // current position in a line
+	nb = 0; // the number of blanks
+	nt = 0; // the number of tabs
+	status = OUT;   // outside blank block
+	while ((c = getchar()) != EOF) {
+		switch (status) {
+			case IN:
+				switch (c) {
+					case ' ':
+						break;
+					case '\t':
+						p += ts - 1;
+						break;
+					case '\n':
+						putchar('\n');
+						nb = 0;
+						nt = 0;
+						p = -1;
+						status = OUT;
+						break;
+					default:    // non-blank
+						bep -= bep % ts;
+						nb = (p - bep) % ts;
+						nt = (p - bep) / ts;
+						while (nt--)
+							putchar(RT);
+						while (nb--)
+							putchar(RB);
+						nt = 0;
+						nb = 0;
+						putchar(c);
+						status = OUT;
+						break;
+				}
+				break;
+			case OUT:
+				switch (c) {
+					case ' ':
+						bep = p;
+						status = IN;
+						break;
+					case '\t':
+						bep = p;
+						p += ts - 1;
+						status = IN;
+						break;
+					case '\n':
+						putchar('\n');
+						p = -1;
+						break;
+					default:
+						putchar(c);
+						break;
+				}
+				break;
+		}
+		++p;
+	}
 }
